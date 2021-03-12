@@ -1,5 +1,9 @@
+# build files
+/build
+
 # project dependencies
 /node_modules
+package-lock.json
 
 # environment files
 .env
