@@ -1,0 +1,9 @@
+{
+  "name": "class-recorder-backend",
+  "version": "0.0.1",
+  "description": "A service to record online classes automatically.",
+  "main": "index.js",
+  "author": "Manuel Hernández <manu.hdez.dev@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
