@@ -18,7 +18,7 @@ export default class PuppeteerScraper implements Scraper<Puppeteer> {
     this.viewportSize = viewport;
   }
 
-  getBrowser = async (headless: boolean = true): Promise<Browser> => {
+  getBrowser = async (headless = true): Promise<Browser> => {
     return await this.scraper.launch({ headless });
   };
 
@@ -35,18 +35,22 @@ export default class PuppeteerScraper implements Scraper<Puppeteer> {
     });
   };
 
-  takeScreenshotFromUrl = async (url: string) => {
+  takeScreenshotFromUrl = async (
+    url: string
+  ): Promise<string | void | Buffer> => {
     try {
       const browser = await this.getBrowser(false);
       const page = await this.getPage(browser);
       await page.goto(url);
       return await this.getScreenshot(page);
-    } catch (err) {}
+    } catch (err) {
+      return;
+    }
   };
 
-  stream = async () => {};
+  // stream = async () => {};
 
-  close = () => {
+  close = (): void => {
     this.currentBrowser?.close();
   };
 }
