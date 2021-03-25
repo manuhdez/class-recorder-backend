@@ -1,7 +1,0 @@
-# Ignore folders
-.github/*
-build
-node_modules
-
-# Ignore files
-*.yml

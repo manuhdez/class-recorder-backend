@@ -14,8 +14,7 @@ app.use(json());
 
 app.use(mainRouter);
 
-const port = 
-  process.env.APP_PORT || 5000;
+const port = process.env.APP_PORT || 5000;
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
