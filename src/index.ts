@@ -2,6 +2,7 @@ import Express from 'express';
 import { config } from 'dotenv';
 import { urlencoded, json } from 'body-parser';
 import mainRouter from './router/main';
+import Database from './context/Database/MongoDatabase';
 
 // load environment variables
 config();
@@ -13,6 +14,12 @@ app.use(urlencoded({ extended: false }));
 app.use(json());
 
 app.use(mainRouter);
+
+const dbConnectionUri = 'mongodb://127.0.0.1:27017';
+
+const database = new Database(dbConnectionUri);
+
+database.connect();
 
 const port = process.env.APP_PORT || 5000;
 
