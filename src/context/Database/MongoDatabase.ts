@@ -5,8 +5,8 @@ export default class MongoDatabase implements Database {
   connectionUri: string;
   connectionOptions: ConnectOptions;
 
-  constructor(connectionUri: string, connectionOptions?: ConnectOptions) {
-    this.connectionUri = connectionUri;
+  constructor(connectionUri?: string, connectionOptions?: ConnectOptions) {
+    this.connectionUri = connectionUri || 'mongodb://127.0.0.1:27017';
     this.connectionOptions = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -16,19 +16,21 @@ export default class MongoDatabase implements Database {
     };
   }
 
-  connect = (): void => {
-    mongoose
-      .connect(this.connectionUri, this.connectionOptions)
-      .then(() => {
-        console.log('Database successfully connected!');
-      })
-      .catch((err) => {
-        console.log('There was a connection error with the database.');
-        console.log(`Error: ${err}`);
-      });
+  connect = async (): Promise<void> => {
+    try {
+      await mongoose.connect(this.connectionUri, this.connectionOptions);
+    } catch (err) {
+      console.log('Error connecting to database');
+      console.log(`Error: ${err}`);
+    }
   };
 
-  disconnect = (): void => {
-    mongoose.disconnect();
+  disconnect = async (): Promise<void> => {
+    try {
+      await mongoose.disconnect();
+    } catch (err) {
+      console.error('Error disconnecting database');
+      console.error(`Error: ${err}`);
+    }
   };
 }
