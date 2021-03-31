@@ -15,7 +15,7 @@ app.use(json());
 
 app.use(mainRouter);
 
-const dbConnectionUri = 'mongodb://127.0.0.1:27017';
+const dbConnectionUri = 'mongodb://127.0.0.1:27017/app';
 
 const database = new Database(dbConnectionUri);
 

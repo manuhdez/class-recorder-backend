@@ -6,7 +6,7 @@ export default class MongoDatabase implements Database {
   connectionOptions: ConnectOptions;
 
   constructor(connectionUri?: string, connectionOptions?: ConnectOptions) {
-    this.connectionUri = connectionUri || 'mongodb://127.0.0.1:27017';
+    this.connectionUri = connectionUri || 'mongodb://127.0.0.1:27017/app';
     this.connectionOptions = {
       useNewUrlParser: true,
       useUnifiedTopology: true,

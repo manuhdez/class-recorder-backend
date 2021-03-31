@@ -10,7 +10,7 @@ export const getTestableRoute = (baseUrl = '/', router: Router): Express => {
   return testApp;
 };
 
-const testDatabase = new MongoDb();
+const testDatabase = new MongoDb('mongodb://127.0.0.1:27017/test');
 
 export const connectDB = async (): Promise<void> => {
   await testDatabase.connect();

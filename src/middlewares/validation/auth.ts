@@ -1,24 +1,30 @@
 import { body } from 'express-validator';
+import { ValidationMsg } from '../../types/validation';
 
 export const emailValidation = body('email')
   .isEmail()
-  .withMessage('Please enter a valid email address.');
+  .withMessage(ValidationMsg.invalidEmail);
 
-export const passwordValidation = body('password')
+export const passwordSignupValidation = body('password')
   .trim()
   .isLength({ min: 4, max: 20 })
-  .withMessage('Password must be between 4 and 20 characters long.');
+  .withMessage(ValidationMsg.invalidSignupPassword);
+
+export const passwordLoginValidation = body('password')
+  .trim()
+  .isLength({ min: 4, max: 20 })
+  .withMessage(ValidationMsg.invalidLoginPassword);
 
 export const usernameValidation = body('username')
   .trim()
   .isString()
   .isLength({ min: 3 })
-  .withMessage('Please enter a valid username with at least 3 characters.');
+  .withMessage(ValidationMsg.invalidUsername);
 
 export const signupValidation = [
   emailValidation,
-  passwordValidation,
+  passwordSignupValidation,
   usernameValidation,
 ];
 
-export const loginValidation = [emailValidation, passwordValidation];
+export const loginValidation = [emailValidation, passwordLoginValidation];
