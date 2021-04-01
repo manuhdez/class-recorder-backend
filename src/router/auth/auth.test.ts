@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { getTestableRoute, connectDB, disconnectTestDB } from 'test/test-utils';
 import User from 'models/user';
-import authRouter, { generateToken } from './auth';
+import authRouter from './auth';
 
 const baseUrl = '/auth';
 const route = getTestableRoute(baseUrl, authRouter);
@@ -140,21 +140,18 @@ describe('auth router', () => {
 
     test('user can log in with valid email and password', async () => {
       const body = { email: mockUser.email, password: mockUser.password };
-      const expectedToken = generateToken(mockUser.email);
       const storedUser = await User.findOne({ email: mockUser.email });
-
-      const expectedResponse = {
-        email: mockUser.email,
-        id: storedUser?.id,
-        token: expectedToken,
-      };
 
       await api
         .post(loginUrl)
         .send(body)
         .expect(200)
         .expect('Content-Type', /application\/json/)
-        .expect(expectedResponse);
+        .expect(({ body }) => {
+          expect(body).toHaveProperty('email', mockUser.email);
+          expect(body).toHaveProperty('id', storedUser?.id);
+          expect(body).toHaveProperty('token');
+        });
     });
 
     test('user cannot log in with an invalid email', async () => {
