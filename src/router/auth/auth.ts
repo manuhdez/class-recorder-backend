@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { validationResult } from 'express-validator';
+import Validation from '../../tools/Validation/Validation';
 import {
   loginValidation,
   signupValidation,
@@ -21,21 +21,12 @@ async function isEmailInUse(email: string): Promise<boolean> {
   return user ? true : false;
 }
 
-function handleBodyValidation(req: Request) {
-  const validationErrors = validationResult(req);
-
-  if (!validationErrors.isEmpty()) {
-    const [error] = validationErrors.array();
-    throw new Error(error.msg);
-  }
-}
-
 authRouter.post(
   '/login',
   loginValidation,
   async (req: Request, res: Response) => {
     try {
-      handleBodyValidation(req);
+      Validation.handleBodyValidation(req);
       const { email, password } = req.body;
 
       // TODO: move method to utility class that throws an error if no user is found
@@ -63,7 +54,7 @@ authRouter.post(
   signupValidation,
   async (req: Request, res: Response) => {
     try {
-      handleBodyValidation(req);
+      Validation.handleBodyValidation(req);
       const { username, email, password } = req.body;
 
       const isUsernameRegistered = await isUsernameInUse(username);
