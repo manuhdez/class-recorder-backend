@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer';
 import { Browser, Page, Viewport } from 'puppeteer';
+import { launch, getStream } from 'puppeteer-stream';
+import fs from 'fs';
 import { Scraper } from './Scraper';
 
 type Puppeteer = typeof puppeteer;
@@ -44,20 +46,28 @@ export default class PuppeteerScraper implements Scraper<Puppeteer> {
     }
   };
 
-  takeFullPageScreenshot = async (
-    url: string
-  ): Promise<string | void | Buffer> => {
+  streamScreen = async (url: string): Promise<string | null> => {
+    const file = fs.createWriteStream(__dirname + '/test.webm');
     try {
-      const browser = await this.getBrowser();
-      const page = await this.getPage(browser);
-      await page.goto(url);
-      const screenshot = await this.getFullPageScreenshot(page);
-      await browser.close();
-      return screenshot;
+      const browser = await launch({
+        defaultViewport: {
+          width: 1920,
+          height: 1080,
+        },
+      });
+      const page = await browser.newPage();
+      page.goto(url);
+      const stream = await getStream(page, { audio: true, video: true });
+      console.log('streaming video content');
+      stream.pipe(file);
+      setTimeout(async () => {
+        await stream.destroy();
+        file.close();
+        console.log('finished');
+      }, 1000 * 10);
+      return 'video file generated';
     } catch (err) {
-      return err.message;
+      return null;
     }
   };
-
-  // stream = async () => {};
 }
