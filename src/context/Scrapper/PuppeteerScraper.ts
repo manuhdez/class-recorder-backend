@@ -46,25 +46,47 @@ export default class PuppeteerScraper implements Scraper<Puppeteer> {
     }
   };
 
+  takeFullPageScreenshot = async (
+    url: string
+  ): Promise<string | void | Buffer> => {
+    try {
+      const browser = await this.getBrowser();
+      const page = await this.getPage(browser);
+      await page.goto(url);
+      const screenshot = await this.getFullPageScreenshot(page);
+      await browser.close();
+      return screenshot;
+    } catch (err) {
+      return err.message;
+    }
+  };
+
   streamScreen = async (url: string): Promise<string | null> => {
-    const file = fs.createWriteStream(__dirname + '/test.webm');
+    const file = fs.createWriteStream(__dirname + '/test-video.webm');
+
     try {
       const browser = await launch({
+        headless: true,
         defaultViewport: {
           width: 1920,
           height: 1080,
         },
       });
       const page = await browser.newPage();
-      page.goto(url);
+      await page.goto(url);
+
+      // interact with the page to get it ready to start recording
       const stream = await getStream(page, { audio: true, video: true });
       console.log('streaming video content');
       stream.pipe(file);
+
       setTimeout(async () => {
         await stream.destroy();
         file.close();
+        browser.close();
         console.log('finished');
       }, 1000 * 10);
+
       return 'video file generated';
     } catch (err) {
       return null;

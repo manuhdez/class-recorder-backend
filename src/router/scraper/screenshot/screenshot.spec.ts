@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { getTestableRoute } from 'test/test-utils';
+import { ValidationMsg } from 'types/validation';
 import screenshotRouter from './screenshot';
-import { ValidationMsg } from '../../../types/validation';
 
 const baseUrl = '/scraper/screenshot';
 const route = getTestableRoute(baseUrl, screenshotRouter);

@@ -1,0 +1,6 @@
+POST http://localhost:5000/scraper/stream HTTP/1.1
+content-type: application/json
+
+{
+    "url": "https://www.youtube.com/watch?v=D-74SbGWUoA"
+}

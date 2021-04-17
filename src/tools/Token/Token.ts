@@ -5,6 +5,13 @@ interface TokenSignData {
   username: string;
 }
 
+type DecodedToken = { [key: string]: string };
+
+interface DecodedUserData {
+  id: string;
+  username: string;
+}
+
 export default class Token {
   jwt = jwt;
 
@@ -28,5 +35,22 @@ export default class Token {
     } catch (e) {
       return false;
     }
+  };
+
+  decodeToken = (token: string): DecodedUserData | null => {
+    try {
+      const decoded = this.jwt.decode(token) as DecodedToken;
+      const data = this.getDataFromDecodedToken(decoded);
+      return data;
+    } catch (err) {
+      return null;
+    }
+  };
+
+  getDataFromDecodedToken = (token: DecodedToken): DecodedUserData => {
+    return {
+      id: token.id as string,
+      username: token.username as string,
+    };
   };
 }
